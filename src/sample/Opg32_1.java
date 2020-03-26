@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Opg30_1 extends Application {
+public class Opg32_1 extends Application {
     String text = "";
     Lock lock = new ReentrantLock();
 
@@ -61,9 +61,13 @@ public class Opg30_1 extends Application {
         public void run() {
             for (int i = 0; i < times - 1 ; i++) {
                 lock.lock();
-                text = text + charToPrint;
-                lock.unlock();
+                try {
+                    text = text + charToPrint;
+                } catch (Exception e) {
 
+                }finally {
+                    lock.unlock();
+                }
             }
         }
     }
@@ -81,8 +85,13 @@ public class Opg30_1 extends Application {
         public void run() {
             for (num = 0; num <=lastNum ; num++) {
                 lock.lock();
-                text = text + num;
-                lock.unlock();
+                try {
+                    text = text + num;
+                } catch (Exception e) {
+
+                } finally {
+                    lock.unlock();
+                }
             }
         }
 
