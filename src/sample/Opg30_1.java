@@ -9,14 +9,19 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Opg30_1 extends Application {
-    TextArea textArea1 = new TextArea();
+    String text = "";
+    Lock lock = new ReentrantLock();
+
+
 
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         Runnable printA = new PrintChar('a', 100);
         Runnable printB = new PrintChar('b', 100);
         Runnable printNum = new PrintNum(100);
@@ -30,9 +35,9 @@ public class Opg30_1 extends Application {
         thread3.start();
 
         primaryStage.setTitle("Hello World");
-
+        TextArea textArea1 = new TextArea(text);
+        textArea1.wrapTextProperty().setValue(true);
         VBox vBox = new VBox(textArea1);
-
         Scene scene = new Scene(vBox, 200, 200);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -54,8 +59,11 @@ public class Opg30_1 extends Application {
 
         @Override
         public void run() {
-            for (int i = 0; i < times ; i++) {
-                textArea1.setText(String.valueOf(charToPrint));
+            for (int i = 0; i < times - 1 ; i++) {
+                lock.lock();
+                text = text + charToPrint;
+                lock.unlock();
+
             }
         }
     }
@@ -72,7 +80,9 @@ public class Opg30_1 extends Application {
         @Override
         public void run() {
             for (num = 0; num <=lastNum ; num++) {
-                System.out.println(" " + num);
+                lock.lock();
+                text = text + num;
+                lock.unlock();
             }
         }
 
